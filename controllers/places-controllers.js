@@ -59,7 +59,7 @@ const createPlace = async (req, res, next) => {
     next(new HttpError("Invalid inputs", 422));
   }
 
-  const { title, description, address, creator } = req.body;
+  const { title, description, address } = req.body;
 
   let coordinates;
 
@@ -75,12 +75,12 @@ const createPlace = async (req, res, next) => {
     address,
     location: coordinates,
     image: req.file.path,
-    creator,
+    creator: req.userData.userId,
   });
 
   let user;
   try {
-    user = await User.findById(creator);
+    user = await User.findById(req.userData.userId);
   } catch (err) {
     const error = new HttpError("Creating place failed", 500);
     return next(error);
@@ -90,8 +90,6 @@ const createPlace = async (req, res, next) => {
     const error = new HttpError("Could not find user for provided id", 404);
     return next(error);
   }
-
-
 
   try {
     const session = await mongoose.startSession();
@@ -130,6 +128,14 @@ const updatePlace = async (req, res, next) => {
     return next(error);
   }
 
+  console.log(updatedPlace.creator);
+  console.log(req.userData.userId);
+
+  if (updatedPlace.creator.toString() !== req.userData.userId) {
+    const error = new HttpError("You are not allowed to edit this place.", 401);
+    return next(error);
+  }
+
   updatedPlace.title = title;
   updatedPlace.description = description;
 
@@ -158,6 +164,11 @@ const deletePlace = async (req, res, next) => {
 
   if (!deletePlace) {
     const error = new HttpError("Could not find place for this id.", 404);
+    return next(error);
+  }
+
+  if (deletePlace.creator.id !== req.userData.userId) {
+    const error = new HttpError("You are not allowed to delete this place.", 401);
     return next(error);
   }
 

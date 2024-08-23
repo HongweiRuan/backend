@@ -50,7 +50,7 @@ app.use((error, req, res, next) => {
 
 mongoose
   .connect(
-    `mongodb+srv://hongweiruan02:SKxw9Ot5p8hjaLeT@mernproject.fmu0c.mongodb.net/mern?retryWrites=true&w=majority&appName=mernProject`
+    `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@mernproject.fmu0c.mongodb.net/mern?retryWrites=true&w=majority&appName=mernProject`
   )
   .then(() => {
     app.listen(5000);
