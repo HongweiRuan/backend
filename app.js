@@ -52,7 +52,7 @@ mongoose
     `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@mernproject.fmu0c.mongodb.net/mern?retryWrites=true&w=majority&appName=mernProject`
   )
   .then(() => {
-    app.listen(5000);
+    app.listen(process.env.PORT || 5000);
   })   
   .catch((err) => {
     console.log(err);
