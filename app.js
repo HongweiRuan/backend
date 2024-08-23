@@ -9,7 +9,6 @@ const placesRoutes = require("./routes/places-routes");
 const usersRoutes = require("./routes/users-routes");
 const HttpError = require("./models/http-error");
 
-
 const app = express();
 
 app.use(bodyParser.json());
@@ -54,7 +53,7 @@ mongoose
   )
   .then(() => {
     app.listen(5000);
-  })
+  })   
   .catch((err) => {
     console.log(err);
   });
